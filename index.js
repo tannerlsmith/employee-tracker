@@ -1,9 +1,9 @@
 const inquirer = require ('inquirer')
-const db = require('./db')
+// Needs to connect class(11)
 require('console.table')
 
-function commands() {
-    inquirer.prompt = ([
+function menu() {
+    inquirer.prompt([
         {
             type: 'list',
             name: 'choice',
@@ -11,50 +11,43 @@ function commands() {
             choices: [
                 {
                     name: 'View all employees',
+                    value: 'viewEmployees',
                 },
                 {
-                    name: 'View employees by department',
+                    name: 'View all roles',
+                    value: 'viewRoles',
                 },
                 {
-                    name: "View All Employees By Manager",
+                    name: "View departments",
+                    value: 'viewDepartments',
                 },
                 {
-                    name: "Add Employee",
+                    name: "Add an employee",
+                    value: 'addEmployee',
                 },
                 {
-                    name: "Remove Employee",
+                    name: "Add a role",
+                    value: 'addRole',
                 },
                 {
-                    name: "Update Employee Role",
+                    name: "Add a department",
+                    value: 'addDepartment', 
                 },
                 {
-                    name: "Update Employee Manager",
-                },
-                {
-                    name: "View All Roles",
-                },
-                {
-                    name: "Add Role",
-                },
-                {
-                    name: "Remove Role",
-                },
-                {
-                    name: "View All Departments",
-                },
-                {
-                    name: "Add Department",
-                },
-                {
-                    name: "Remove Department",
-                },
-                {
-                    name: "Quit",
+                    name: "Update an employee role",
+                    value: 'updateEmployeeRole',
                 }
-        
             ]
         }
-    ])
-
-
+    ]).then(answers => {
+        console.log(answers)
+        if (answers.choice === 'viewDepartments') {
+            console.log()
+        }
+    })
 }
+
+menu()
+
+
+// name: = menu
