@@ -8,7 +8,7 @@ VALUES
     ('legal'),
     ('finance');
 
-INSERT INTO role
+INSERT INTO role (employee)
     (title, salary, department_id)
 VALUES
     ('Sales Leader', 30000, 100),
