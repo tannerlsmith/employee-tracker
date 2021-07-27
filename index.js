@@ -270,7 +270,7 @@ function updateEmployeeRole() {
         .then(function(data) {
             console.log('updating', data);
             const idUpdate = {};
-            idUpdate.employeeId = parseInt(answers.updateEmployeeRole.split(" ")[0])
+            idUpdate.employeeId = parseInt(answers.updateEmployeeRole.split(" ")[0]) // pushing name as a sub-string
             if (answers.new_role === 'manager') {
                 idUpdate.role_id = 1;
             } else if (answers.new_role === 'employee') {
@@ -287,6 +287,6 @@ function updateEmployeeRole() {
     })
 }
 
-
-
 menu()
+
+
