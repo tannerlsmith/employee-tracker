@@ -5,6 +5,7 @@ const addEmployeeQuestions = ['What is the first name?', 'What is the last name?
 
 
 function menu() {
+    // Prompts and choices user can see.
     inquirer.prompt([
         {
             type: 'list',
@@ -68,6 +69,14 @@ function menu() {
             addEmployee()
         }
 
+        else if (answers.choice === 'addRole') {
+            addRole()
+        }
+
+        else if (answers.choice === 'updateEmployeeRole') {
+            updateEmployeeRole()
+        }
+
         else {
             console.log('Goodbye.')
             connection.end()
@@ -88,7 +97,6 @@ function addDepartment() {
             "INSERT INTO department SET ?",
             {
               name: res.name
-            
             },
             function(err) {
                 if (err) throw err
@@ -126,8 +134,6 @@ function viewEmployees() {
     })
 }
 
-
-// WORKING ON THIS
 function addEmployee() {
     connection.query('SELECT * FROM role', function (err, res) {
         if (err) throw err;
@@ -185,11 +191,101 @@ function addEmployee() {
         })
 };
 
+function addRole() {
+    connection.query('SELECT * FROM department', function(err, res) {
+        if (err) throw err;
+    
+        inquirer 
+        .prompt([
+            {
+                name: 'new_role',
+                type: 'input', 
+                message: "What new role would you like to add?"
+            },
+            {
+                name: 'salary',
+                type: 'input',
+                message: 'What is the salary of this role? (Enter a number)'
+            },
+            {
+                name: 'Department',
+                type: 'list',
+                choices: function() {
+                    var deptArry = [];
+                    for (let i = 0; i < res.length; i++) {
+                    deptArry.push(res[i].name);
+                    }
+                    return deptArry;
+                },
+            }
+        ]).then(function (answer) {
+            let department_id;
+            for (let a = 0; a < res.length; a++) {
+                if (res[a].name == answer.Department) {
+                    department_id = res[a].id;
+                }
+            }
+    
+            connection.query(
+                'INSERT INTO role SET ?',
+                {
+                    title: answer.new_role,
+                    salary: answer.salary,
+                    department_id: department_id
+                },
+                function (err, res) {
+                    if(err)throw err;
+                    console.log('Your new role has been added!');
+                    console.table('All Roles:', res);
+                    menu();
+                })
+        })
+    })
+};
 
+function updateEmployeeRole() {
+    let allEmployees = [];
+    connection.query('SELECT * FROM employee', function(err, answers) {
+        for (let i = 0; i < answers.length; i++) {
+            let employeeString = 
+                answers[i].id + ' ' + answers[i].first_name + ' ' + answers[i].last_name;
+            allEmployees.push(employeeString);
+        }
 
-// NEW FUNCTIONS
-function addRole() {}
-function updateEmployeeRole() {}
+        inquirer
+        .prompt([
+            {
+                type: "list",
+                name: "updateEmpRole",
+                message: "select employee to update role",
+                choices: allEmployees
+            },
+            {
+                type: "list",
+                message: "select new role",
+                choices: ["manager", "employee"],
+                name: "newrole"
+            }
+        ])
+        .then(function(data) {
+            console.log('updating', data);
+            const idUpdate = {};
+            idUpdate.employeeId = parseInt(answers.updateEmployeeRole.split(" ")[0])
+            if (answers.new_role === 'manager') {
+                idUpdate.role_id = 1;
+            } else if (answers.new_role === 'employee') {
+                idUpdate.role_id = 2;
+            }
+            connection.query(
+                'UPDATE employee SET role_id = ? WHERE id = ?',
+                [idUpdate.role_id, idUpdate.employeeId],
+                function(err, data) {
+                    menu();
+                }
+            )
+        })
+    })
+}
 
 
 
