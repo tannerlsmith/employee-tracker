@@ -256,7 +256,7 @@ function updateEmployeeRole() {
         .prompt([
             {
                 type: "list",
-                name: "updateEmpRole",
+                name: "updateEmployeeRole",
                 message: "select employee to update role",
                 choices: allEmployees
             },
@@ -270,7 +270,7 @@ function updateEmployeeRole() {
         .then(function(data) {
             console.log('updating', data);
             const idUpdate = {};
-            idUpdate.employeeId = parseInt(answers.updateEmployeeRole.split(" ")[0]) // pushing name as a sub-string
+            idUpdate.employeeId = parseInt(data.updateEmployeeRole.split(" ")[0]) // pushing name as a sub-string
             if (answers.new_role === 'manager') {
                 idUpdate.role_id = 1;
             } else if (answers.new_role === 'employee') {
